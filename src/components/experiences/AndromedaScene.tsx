@@ -3,7 +3,7 @@ import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { sampleImageToParticles } from './sampleImage'
 import { useGalaxyMouse } from './useGalaxyMouse'
-import imgUrl from '../public/andromeda.webp'
+import imgUrl from '../../assets/andromeda.webp'
 
 const VS = /* glsl */`
   attribute float aSize;
