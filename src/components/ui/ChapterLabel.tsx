@@ -55,9 +55,9 @@ export default function ChapterLabel({ chapter, delay = 0 }: ChapterLabelProps) 
       style={{
         position: 'fixed',
         top: '2.5rem',
-        left: '2.8rem',
+        left: 'clamp(1rem, 4vw, 2.8rem)',
         fontFamily: 'var(--font-mono)',
-        fontSize: '1.05rem',
+        fontSize: 'clamp(0.72rem, 2.2vw, 1.05rem)',
         letterSpacing: '0.16em',
         color: 'var(--signal-blue)',
         opacity: 0,
