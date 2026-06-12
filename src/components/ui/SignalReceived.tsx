@@ -6,6 +6,7 @@ interface SignalReceivedProps {
 }
 
 const TITLE = 'SIGNAL RECEIVED'
+const isMobile = window.innerWidth < 768
 
 export default function SignalReceived({ visible }: SignalReceivedProps) {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -65,8 +66,8 @@ export default function SignalReceived({ visible }: SignalReceivedProps) {
         style={{
           fontFamily: 'var(--font-display)',
           fontWeight: 300,
-          fontSize: 'clamp(2.5rem, 6.5vw, 6.2rem)',
-          letterSpacing: '0.22em',
+          fontSize: isMobile ? 'clamp(2.0rem, 6.5vw, 6.2rem)' : 'clamp(2.5rem, 6.5vw, 6.2rem)',
+          letterSpacing: isMobile ? '0.10em' : '0.22em',
           color: 'var(--star-white)',
           lineHeight: 1.15,
           textAlign: 'center',
