@@ -3,6 +3,7 @@ import { Canvas } from '@react-three/fiber'
 import { gsap } from 'gsap'
 
 const isMobile = window.innerWidth < 768
+const isTouch  = window.matchMedia('(pointer: coarse)').matches
 
 const SceneMap = {
   andromeda:  lazy(() => import('./AndromedaScene')),
@@ -143,7 +144,7 @@ export default function GalaxyExperience({ galaxy, onReturn }: GalaxyExperienceP
       }}
     >
       {/* Three.js canvas */}
-      <div style={{ position: 'absolute', inset: 0 }}>
+      <div style={{ position: 'absolute', inset: 0, pointerEvents: isTouch ? 'none' : 'auto' }}>
         <Canvas
           camera={{ position: [0, 3, 5], fov: 55, near: 0.1, far: 500 }}
           gl={{ antialias: false, powerPreference: 'high-performance' }}
