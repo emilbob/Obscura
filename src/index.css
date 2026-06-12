@@ -42,3 +42,7 @@ body {
   background: rgba(74, 158, 255, 0.2);
   color: var(--star-white);
 }
+
+@media (pointer: coarse) {
+  body { cursor: auto; }
+}

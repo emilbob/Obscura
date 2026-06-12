@@ -145,7 +145,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
       <Corner pos="top-right">DEC +22° 00′ 52″</Corner>
 
       {/* Precision dial */}
-      <svg viewBox="0 0 200 200" width="380" height="380" style={{ overflow: 'visible' }}>
+      <svg viewBox="0 0 200 200" style={{ overflow: 'visible', width: 'min(380px, 82vw)', height: 'min(380px, 82vw)' }}>
         {/* Outer decorative ring */}
         <circle cx="100" cy="100" r="90" stroke="rgba(74,158,255,0.06)" strokeWidth="1" fill="none" />
 
@@ -206,7 +206,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
           ref={statusRef}
           style={{
             fontFamily: 'var(--font-mono)',
-            fontSize: '1.35rem',
+            fontSize: 'clamp(0.72rem, 3.2vw, 1.35rem)',
             letterSpacing: '0.22em',
             color: 'rgba(74, 158, 255, 0.65)',
             textTransform: 'uppercase',
@@ -224,7 +224,7 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
           marginTop: '2.6rem',
           opacity: 0,
           fontFamily: 'var(--font-mono)',
-          fontSize: '1.30rem',
+          fontSize: 'clamp(0.68rem, 3vw, 1.30rem)',
           letterSpacing: '0.42em',
           color: 'rgba(74, 158, 255, 0.80)',
           textTransform: 'uppercase',
@@ -247,7 +247,7 @@ function Corner({ pos, children }: { pos: string; children: string }) {
   const style: React.CSSProperties = {
     position: 'absolute',
     fontFamily: 'var(--font-mono)',
-    fontSize: '1.10rem',
+    fontSize: 'clamp(0.55rem, 1.8vw, 1.10rem)',
     letterSpacing: '0.14em',
     color: 'rgba(200, 216, 240, 0.35)',
     pointerEvents: 'none',

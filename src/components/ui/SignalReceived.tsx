@@ -65,12 +65,14 @@ export default function SignalReceived({ visible }: SignalReceivedProps) {
         style={{
           fontFamily: 'var(--font-display)',
           fontWeight: 300,
-          fontSize: 'clamp(2.8rem, 6.5vw, 6.2rem)',
-          letterSpacing: '0.38em',
+          fontSize: 'clamp(2.0rem, 6.5vw, 6.2rem)',
+          letterSpacing: '0.22em',
           color: 'var(--star-white)',
-          lineHeight: 1,
-          whiteSpace: 'nowrap',
+          lineHeight: 1.15,
+          textAlign: 'center',
           display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'center',
           margin: 0,
         }}
       >
@@ -100,11 +102,13 @@ export default function SignalReceived({ visible }: SignalReceivedProps) {
         ref={subRef}
         style={{
           fontFamily: 'var(--font-mono)',
-          fontSize: 'clamp(0.90rem, 1.4vw, 1.1rem)',
-          letterSpacing: '0.22em',
+          fontSize: 'clamp(0.72rem, 1.4vw, 1.1rem)',
+          letterSpacing: '0.18em',
           color: 'rgba(180, 215, 255, 1.0)',
           opacity: 0,
           textTransform: 'uppercase',
+          textAlign: 'center',
+          padding: '0 1.5rem',
         }}
       >
         RA 05h 34m 32s &nbsp;·&nbsp; DEC +22° 00′ 52″ &nbsp;·&nbsp; FREQ 1420.405 MHz

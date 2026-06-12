@@ -172,7 +172,7 @@ export default function SilenceChapter({ progressRef, visible, onSelect }: Silen
         <h2 style={{
           fontFamily: 'var(--font-display)',
           fontWeight: 5000,
-          fontSize: 'clamp(2.8rem, 6.5vw, 6.2rem)',
+          fontSize: 'clamp(2.0rem, 6.5vw, 6.2rem)',
           letterSpacing: '0.55em',
           color: 'rgba(220, 235, 255, 1.0)',
           lineHeight: 1,
@@ -325,6 +325,11 @@ function GalaxyStar({ id, name, top, left, onSelect }: GalaxyStarProps) {
         pointerEvents: 'auto',
         cursor: 'crosshair',
         opacity: 0,
+        minWidth: 44,
+        minHeight: 44,
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
       }}
       onMouseEnter={onEnter}
       onMouseLeave={onLeave}

@@ -2,6 +2,8 @@ import { useRef, useEffect, lazy, Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { gsap } from 'gsap'
 
+const isMobile = window.innerWidth < 768
+
 const SceneMap = {
   andromeda:  lazy(() => import('./AndromedaScene')),
   sombrero:   lazy(() => import('./SombreroScene')),
@@ -145,7 +147,7 @@ export default function GalaxyExperience({ galaxy, onReturn }: GalaxyExperienceP
         <Canvas
           camera={{ position: [0, 3, 5], fov: 55, near: 0.1, far: 500 }}
           gl={{ antialias: false, powerPreference: 'high-performance' }}
-          dpr={[1, 1.5]}
+          dpr={[1, isMobile ? 1 : 1.5]}
           style={{ width: '100%', height: '100%' }}
         >
           <Suspense fallback={null}>
@@ -161,13 +163,13 @@ export default function GalaxyExperience({ galaxy, onReturn }: GalaxyExperienceP
         <div style={{
           position: 'absolute',
           top: '2.8rem',
-          left: '3.2rem',
+          left: 'clamp(1rem, 4vw, 3.2rem)',
           perspective: '600px',
         }}>
           <h1 style={{
             fontFamily:    'var(--font-display)',
             fontWeight:    300,
-            fontSize:      'clamp(2.4rem, 4.8vw, 5.0rem)',
+            fontSize:      'clamp(1.6rem, 4.8vw, 5.0rem)',
             letterSpacing: '0.46em',
             color:         'rgba(220, 235, 255, 1.0)',
             lineHeight:    1,
@@ -207,8 +209,8 @@ export default function GalaxyExperience({ galaxy, onReturn }: GalaxyExperienceP
           style={{
             position:      'absolute',
             bottom:        '3.8rem',
-            left:          '3.2rem',
-            maxWidth:      '36rem',
+            left:          'clamp(1rem, 4vw, 3.2rem)',
+            maxWidth:      'min(36rem, calc(100vw - clamp(2rem, 8vw, 6.4rem)))',
             fontFamily:    'var(--font-display)',
             fontWeight:    300,
             fontSize:      'clamp(0.92rem, 1.5vw, 1.18rem)',
@@ -231,13 +233,13 @@ export default function GalaxyExperience({ galaxy, onReturn }: GalaxyExperienceP
         style={{
           position:      'absolute',
           top:           '2.8rem',
-          right:         '3.2rem',
+          right:         'clamp(1rem, 4vw, 3.2rem)',
           background:    'none',
           border:        'none',
           padding:       0,
           cursor:        'pointer',
           fontFamily:    'var(--font-mono)',
-          fontSize:      '1.05rem',
+          fontSize:      'clamp(0.75rem, 2vw, 1.05rem)',
           letterSpacing: '0.20em',
           color:         'rgba(180, 215, 255, 0.95)',
           textTransform: 'uppercase',

@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 
 const fmt = (n: number) => (n >= 0 ? '+' : '') + n.toFixed(3)
+const IS_TOUCH = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches
 
 export default function CustomCursor() {
   const ringRef   = useRef<HTMLDivElement>(null)
@@ -13,6 +14,7 @@ export default function CustomCursor() {
   const counter   = useRef({ x: 0, y: 0 })
 
   useEffect(() => {
+    if (IS_TOUCH) return
     const ring  = ringRef.current
     const dot   = dotRef.current
     const coord = coordRef.current
@@ -88,6 +90,7 @@ export default function CustomCursor() {
     }
   }, [])
 
+  if (IS_TOUCH) return null
   return (
     <>
       {/* Lagging outer ring */}

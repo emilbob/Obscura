@@ -16,6 +16,9 @@ import TopControls from './components/ui/TopControls'
 import ChapterIndicator from './components/ui/ChapterIndicator'
 import GalaxyExperience from './components/experiences/GalaxyExperience'
 
+const isMobile = window.innerWidth < 768
+const isTouch  = window.matchMedia('(pointer: coarse)').matches
+
 // Module-level singleton — lives outside React, unaffected by StrictMode double-mount
 const ambience = new Audio('/drone-atmospheric-ambience-betacut-1-01-01.mp3')
 ambience.loop   = true
@@ -47,7 +50,7 @@ export default function App() {
   const scrollDelayRef  = useRef(0)
 
   useEffect(() => {
-    const lenis = new Lenis({ lerp: 0.07, smoothWheel: true })
+    const lenis = new Lenis({ lerp: isTouch ? 0.18 : 0.07, smoothWheel: true })
     lenisRef.current = lenis
     lenis.on('scroll', ScrollTrigger.update)
     gsap.ticker.add((time) => lenis.raf(time * 1000))
@@ -136,7 +139,7 @@ export default function App() {
           style={{ width: '100%', height: '100%' }}
           camera={{ position: [0, 0, 5], fov: 58, near: 0.1, far: 2000 }}
           gl={{ antialias: false, powerPreference: 'high-performance' }}
-          dpr={[1, 1.5]}
+          dpr={[1, isMobile ? 1 : 1.5]}
         >
           <Scene scrollRef={scrollProgressRef} startRef={sceneStartRef} />
         </Canvas>
