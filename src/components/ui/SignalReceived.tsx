@@ -1,0 +1,114 @@
+import { useRef, useEffect } from 'react'
+import { gsap } from 'gsap'
+
+interface SignalReceivedProps {
+  visible: boolean
+}
+
+const TITLE = 'SIGNAL RECEIVED'
+
+export default function SignalReceived({ visible }: SignalReceivedProps) {
+  const containerRef = useRef<HTMLDivElement>(null)
+  const charRefs     = useRef<(HTMLSpanElement | null)[]>([])
+  const subRef       = useRef<HTMLDivElement>(null)
+  const lineRef      = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    if (!visible) return
+    const chars = charRefs.current.filter(Boolean) as HTMLSpanElement[]
+    if (!chars.length) return
+
+    const tl = gsap.timeline()
+
+    // Characters slide up one by one
+    tl.fromTo(chars,
+      { opacity: 0, y: 20, rotateX: -18 },
+      { opacity: 1, y: 0, rotateX: 0, duration: 1.5, stagger: 0.06, ease: 'power3.out' }
+    )
+    // Separator line draws in
+    .fromTo(lineRef.current,
+      { scaleX: 0, transformOrigin: 'center center' },
+      { scaleX: 1, duration: 1.4, ease: 'power3.inOut' },
+      '-=0.8'
+    )
+    // Coordinate sub-line fades in
+    .fromTo(subRef.current,
+      { opacity: 0 },
+      { opacity: 0.90, duration: 2.0, ease: 'power2.out' },
+      '-=0.6'
+    )
+
+    return () => { tl.kill() }
+  }, [visible])
+
+  if (!visible) return null
+
+  return (
+    <div
+      ref={containerRef}
+      style={{
+        position: 'fixed',
+        inset: 0,
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        pointerEvents: 'none',
+        userSelect: 'none',
+        perspective: '700px',
+        gap: '1.4rem',
+        paddingTop: '12vh', // offset slightly down to clear the iris which sits above centre
+      }}
+    >
+      {/* Main title */}
+      <h2
+        style={{
+          fontFamily: 'var(--font-display)',
+          fontWeight: 300,
+          fontSize: 'clamp(2.8rem, 6.5vw, 6.2rem)',
+          letterSpacing: '0.38em',
+          color: 'var(--star-white)',
+          lineHeight: 1,
+          whiteSpace: 'nowrap',
+          display: 'flex',
+          margin: 0,
+        }}
+      >
+        {TITLE.split('').map((char, i) => (
+          <span
+            key={i}
+            ref={el => { charRefs.current[i] = el }}
+            style={{ display: 'inline-block', opacity: 0 }}
+          >
+            {char === ' ' ? ' ' : char}
+          </span>
+        ))}
+      </h2>
+
+      {/* Thin separator */}
+      <div
+        ref={lineRef}
+        style={{
+          width: 'clamp(240px, 30vw, 480px)',
+          height: '1px',
+          background: 'linear-gradient(90deg, transparent, rgba(74,158,255,0.35) 30%, rgba(74,158,255,0.35) 70%, transparent)',
+        }}
+      />
+
+      {/* Coordinates — matching the loading screen's Crab Nebula data */}
+      <div
+        ref={subRef}
+        style={{
+          fontFamily: 'var(--font-mono)',
+          fontSize: 'clamp(0.90rem, 1.4vw, 1.1rem)',
+          letterSpacing: '0.22em',
+          color: 'rgba(180, 215, 255, 1.0)',
+          opacity: 0,
+          textTransform: 'uppercase',
+        }}
+      >
+        RA 05h 34m 32s &nbsp;·&nbsp; DEC +22° 00′ 52″ &nbsp;·&nbsp; FREQ 1420.405 MHz
+      </div>
+    </div>
+  )
+}
