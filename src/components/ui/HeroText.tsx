@@ -110,7 +110,7 @@ export default function HeroText({ delay = 5.2, hide = false }: HeroTextProps) {
         style={{
           fontFamily: "var(--font-display)",
           fontWeight: 300,
-          fontSize: "clamp(2.2rem, 8.5vw, 8.5rem)",
+          fontSize: "clamp(2.8rem, 8.5vw, 8.5rem)",
           letterSpacing: "0.22em",
           color: "var(--star-white)",
           lineHeight: 1,
@@ -147,7 +147,7 @@ export default function HeroText({ delay = 5.2, hide = false }: HeroTextProps) {
         ref={subtitleRef}
         style={{
           fontFamily: "var(--font-mono)",
-          fontSize: "clamp(0.65rem, 1.8vw, 1.4rem)",
+          fontSize: "clamp(0.82rem, 1.8vw, 1.4rem)",
           letterSpacing: "0.28em",
           color: "rgba(200, 216, 240, 0.92)",
           textTransform: "uppercase",

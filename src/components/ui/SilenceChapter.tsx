@@ -172,7 +172,7 @@ export default function SilenceChapter({ progressRef, visible, onSelect }: Silen
         <h2 style={{
           fontFamily: 'var(--font-display)',
           fontWeight: 5000,
-          fontSize: 'clamp(2.0rem, 6.5vw, 6.2rem)',
+          fontSize: 'clamp(2.5rem, 6.5vw, 6.2rem)',
           letterSpacing: '0.55em',
           color: 'rgba(220, 235, 255, 1.0)',
           lineHeight: 1,
@@ -207,7 +207,7 @@ export default function SilenceChapter({ progressRef, visible, onSelect }: Silen
           ref={lineRef}
           style={{
             position: 'absolute',
-            top: 'calc(30vh + clamp(2.8rem, 6.5vw, 6.2rem) + 2.4rem)',
+            top: 'calc(30vh + clamp(2.5rem, 6.5vw, 6.2rem) + 2.4rem)',
             left: '50%',
             transform: 'translateX(-50%) scaleX(0)',
             width: 'clamp(200px, 26vw, 440px)',

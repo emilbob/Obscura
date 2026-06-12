@@ -65,7 +65,7 @@ export default function SignalReceived({ visible }: SignalReceivedProps) {
         style={{
           fontFamily: 'var(--font-display)',
           fontWeight: 300,
-          fontSize: 'clamp(2.0rem, 6.5vw, 6.2rem)',
+          fontSize: 'clamp(2.5rem, 6.5vw, 6.2rem)',
           letterSpacing: '0.22em',
           color: 'var(--star-white)',
           lineHeight: 1.15,
