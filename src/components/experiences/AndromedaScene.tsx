@@ -3,6 +3,7 @@ import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { sampleImageToParticles } from './sampleImage'
 import { useGalaxyMouse } from './useGalaxyMouse'
+import { framingScale } from '../../lib/framing'
 import imgUrl from '../../assets/andromeda.webp'
 
 const VS = /* glsl */`
@@ -199,13 +200,16 @@ export default function AndromedaScene() {
 }
 
 function CameraRig() {
-  useFrame(({ camera, clock }) => {
+  useFrame(({ camera, clock, size }) => {
     const t     = clock.getElapsedTime()
     const orbit = t * 0.105
     const dist  = 7.0 + Math.sin(t * 0.070) * 0.90
     camera.position.x = Math.cos(orbit) * dist
     camera.position.y = 3.0 + Math.sin(t * 0.042) * 0.60
     camera.position.z = Math.sin(orbit) * dist
+    // Orbit is centred on the origin, so scaling the whole vector backs the
+    // camera off radially and keeps the disc inside a narrow viewport.
+    camera.position.multiplyScalar(framingScale(size.width / size.height))
     camera.lookAt(0, 0, 0)
   })
   return null

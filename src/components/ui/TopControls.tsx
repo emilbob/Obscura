@@ -1,11 +1,13 @@
 import { useRef, useEffect } from 'react'
 import { gsap } from 'gsap'
+import { useViewport } from '../../hooks/useViewport'
 
 interface TopControlsProps {
   onScrollTop: () => void
 }
 
 export default function TopControls({ onScrollTop }: TopControlsProps) {
+  const vp       = useViewport()
   const upRef    = useRef<HTMLButtonElement>(null)
   const brandRef = useRef<HTMLButtonElement>(null)
 
@@ -78,6 +80,7 @@ export default function TopControls({ onScrollTop }: TopControlsProps) {
           letterSpacing: '0.22em',
           textTransform: 'uppercase',
           zIndex: 30,
+          minHeight: 44,
         }}
         aria-label="Restart experience"
       >
@@ -93,11 +96,17 @@ export default function TopControls({ onScrollTop }: TopControlsProps) {
         style={{
           ...btnBase,
           position: 'fixed',
-          bottom: '2.5rem',
-          right: '2.8rem',
+          // clear of the home indicator / browser bottom bar
+          bottom: 'calc(2.5rem + env(safe-area-inset-bottom))',
+          right: vp.isMobile ? '1rem' : '2.8rem',
           fontSize: '2.4rem',
           lineHeight: 1,
           zIndex: 30,
+          minWidth: 44,
+          minHeight: 44,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
         }}
         aria-label="Scroll to top"
       >

@@ -1,5 +1,6 @@
 import { useRef, useEffect } from 'react'
 import { gsap } from 'gsap'
+import { useViewport } from '../../hooks/useViewport'
 
 interface ChapterIndicatorProps {
   chapter: number
@@ -7,14 +8,19 @@ interface ChapterIndicatorProps {
   delay?:  number
 }
 
-const DOT_GAP    = 38   // px between dot centers
 const DOT_SIZE   = 6    // px, resting
 const TRACK_W    = 1    // px
 
 export default function ChapterIndicator({ chapter, total = 7, delay = 0 }: ChapterIndicatorProps) {
+  const vp        = useViewport()
   const wrapRef   = useRef<HTMLDivElement>(null)
   const fillRef   = useRef<HTMLDivElement>(null)
   const dotRefs   = useRef<(HTMLDivElement | null)[]>([])
+
+  // On a phone the full-height rail sits over the centred copy, so tuck it
+  // against the edge and shorten it. Landscape has even less height to spend.
+  const DOT_GAP = vp.isShort ? 22 : vp.isMobile ? 28 : 38   // px between dot centers
+  const railLeft = vp.isMobile ? '0.85rem' : '2.1rem'
 
   const totalH = (total - 1) * DOT_GAP
 
@@ -64,7 +70,7 @@ export default function ChapterIndicator({ chapter, total = 7, delay = 0 }: Chap
       ref={wrapRef}
       style={{
         position: 'fixed',
-        left: '2.1rem',
+        left: railLeft,
         top: '50%',
         transform: 'translateY(-50%)',
         width: DOT_SIZE + 4,

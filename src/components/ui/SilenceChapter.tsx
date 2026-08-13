@@ -1,5 +1,6 @@
 import { useRef, useEffect, useCallback } from 'react'
 import { gsap } from 'gsap'
+import { useViewport } from '../../hooks/useViewport'
 
 interface SilenceChapterProps {
   progressRef: React.MutableRefObject<number>
@@ -9,13 +10,35 @@ interface SilenceChapterProps {
 
 const HEADING = 'SILENCE'
 
-// numeric cx/cy used for both CSS positioning and SVG coordinates
-const GALAXIES = [
-  { id: 'andromeda',  name: 'Andromeda',  cy: 58, cx: 55 },
-  { id: 'sombrero',   name: 'Sombrero',   cy: 70, cx: 28 },
-  { id: 'whirlpool',  name: 'Whirlpool',  cy: 68, cx: 72 },
-  { id: 'triangulum', name: 'Triangulum', cy: 81, cx: 46 },
-]
+// Percentages, used for both CSS positioning and the SVG's 0–100 viewBox, so
+// the stars and the lines connecting them always agree.
+//
+// The spread has to be re-cut per shape: the wide layout's 28–72% horizontal
+// range collapses to ~150px on a phone (a cramped diamond), and its 58–81%
+// vertical range collapses to ~90px on a landscape phone (a flat sliver).
+const LAYOUTS = {
+  wide: [
+    { id: 'andromeda',  name: 'Andromeda',  cx: 55, cy: 58 },
+    { id: 'sombrero',   name: 'Sombrero',   cx: 28, cy: 70 },
+    { id: 'whirlpool',  name: 'Whirlpool',  cx: 72, cy: 68 },
+    { id: 'triangulum', name: 'Triangulum', cx: 46, cy: 81 },
+  ],
+  // Portrait phone: push out to the edges the labels can still afford, and use
+  // the abundant vertical room.
+  portrait: [
+    { id: 'andromeda',  name: 'Andromeda',  cx: 60, cy: 53 },
+    { id: 'sombrero',   name: 'Sombrero',   cx: 20, cy: 68 },
+    { id: 'whirlpool',  name: 'Whirlpool',  cx: 80, cy: 64 },
+    { id: 'triangulum', name: 'Triangulum', cx: 42, cy: 84 },
+  ],
+  // Landscape phone: height is the scarce axis — start higher, finish lower.
+  short: [
+    { id: 'andromeda',  name: 'Andromeda',  cx: 55, cy: 46 },
+    { id: 'sombrero',   name: 'Sombrero',   cx: 26, cy: 64 },
+    { id: 'whirlpool',  name: 'Whirlpool',  cx: 74, cy: 61 },
+    { id: 'triangulum', name: 'Triangulum', cx: 45, cy: 82 },
+  ],
+}
 
 // pairs in draw order — traces outer quad then centre diagonal
 const LINES: [number, number][] = [
@@ -28,6 +51,13 @@ const LINES: [number, number][] = [
 
 
 export default function SilenceChapter({ progressRef, visible, onSelect }: SilenceChapterProps) {
+  const vp              = useViewport()
+  const galaxies        = vp.isShort ? LAYOUTS.short : vp.isMobile ? LAYOUTS.portrait : LAYOUTS.wide
+  // 0.55em tracking on 7 characters is wider than a phone; ease it off with
+  // the type size so the heading never runs into the edges.
+  const headingSize     = vp.isMobile ? 'clamp(1.6rem, 7.4vw, 2.6rem)' : 'clamp(2.5rem, 6.5vw, 6.2rem)'
+  const headingTracking = vp.isMobile ? '0.34em' : '0.55em'
+  const headingTop      = vp.isShort ? '16vh' : '30vh'
   const overlayRef      = useRef<HTMLDivElement>(null)
   const charRefs        = useRef<(HTMLSpanElement | null)[]>([])
   const lineRef         = useRef<HTMLDivElement>(null)
@@ -163,7 +193,7 @@ export default function SilenceChapter({ progressRef, visible, onSelect }: Silen
           display: 'flex',
           justifyContent: 'center',
           alignItems: 'center',
-          paddingTop: '30vh',
+          paddingTop: headingTop,
           pointerEvents: 'none',
           userSelect: 'none',
           perspective: '700px',
@@ -172,8 +202,11 @@ export default function SilenceChapter({ progressRef, visible, onSelect }: Silen
         <h2 style={{
           fontFamily: 'var(--font-display)',
           fontWeight: 5000,
-          fontSize: 'clamp(2.5rem, 6.5vw, 6.2rem)',
-          letterSpacing: '0.55em',
+          fontSize: headingSize,
+          letterSpacing: headingTracking,
+          // tracking leaves a trailing gap after the last glyph; match it on
+          // the left so the word sits optically centred
+          paddingLeft: headingTracking,
           color: 'rgba(220, 235, 255, 1.0)',
           lineHeight: 1,
           whiteSpace: 'nowrap',
@@ -207,10 +240,10 @@ export default function SilenceChapter({ progressRef, visible, onSelect }: Silen
           ref={lineRef}
           style={{
             position: 'absolute',
-            top: 'calc(30vh + clamp(2.5rem, 6.5vw, 6.2rem) + 2.4rem)',
+            top: `calc(${headingTop} + ${headingSize} + 2.4rem)`,
             left: '50%',
             transform: 'translateX(-50%) scaleX(0)',
-            width: 'clamp(200px, 26vw, 440px)',
+            width: 'clamp(160px, 40vw, 440px)',
             height: '1px',
             background: 'linear-gradient(90deg, transparent, rgba(74,158,255,0.28) 35%, rgba(74,158,255,0.28) 65%, transparent)',
             opacity: 0,
@@ -233,8 +266,8 @@ export default function SilenceChapter({ progressRef, visible, onSelect }: Silen
             <line
               key={i}
               ref={el => { lineElemRefs.current[i] = el }}
-              x1={GALAXIES[a].cx} y1={GALAXIES[a].cy}
-              x2={GALAXIES[b].cx} y2={GALAXIES[b].cy}
+              x1={galaxies[a].cx} y1={galaxies[a].cy}
+              x2={galaxies[b].cx} y2={galaxies[b].cy}
               stroke="rgba(74,158,255,0.60)"
               strokeWidth="1.0"
               vectorEffect="non-scaling-stroke"
@@ -244,13 +277,14 @@ export default function SilenceChapter({ progressRef, visible, onSelect }: Silen
         </svg>
 
         {/* Galaxy signal stars */}
-        {GALAXIES.map(g => (
+        {galaxies.map(g => (
           <GalaxyStar
             key={g.id}
             id={g.id}
             name={g.name}
             top={`${g.cy}%`}
             left={`${g.cx}%`}
+            compact={vp.isMobile}
             onSelect={onSelect}
           />
         ))}
@@ -265,10 +299,11 @@ interface GalaxyStarProps {
   name:      string
   top:       string
   left:      string
+  compact?:  boolean
   onSelect?: (id: string) => void
 }
 
-function GalaxyStar({ id, name, top, left, onSelect }: GalaxyStarProps) {
+function GalaxyStar({ id, name, top, left, compact = false, onSelect }: GalaxyStarProps) {
   const dotRef   = useRef<HTMLDivElement>(null)
   const labelRef = useRef<HTMLDivElement>(null)
   const ringRef  = useRef<HTMLDivElement>(null)
@@ -372,8 +407,9 @@ function GalaxyStar({ id, name, top, left, onSelect }: GalaxyStarProps) {
           transform: 'translateX(-50%)',
           marginTop: '0.65rem',
           fontFamily: 'var(--font-mono)',
-          fontSize: '0.76rem',
-          letterSpacing: '0.22em',
+          // narrower labels keep the outermost stars' names off the edges
+          fontSize: compact ? '0.64rem' : '0.76rem',
+          letterSpacing: compact ? '0.14em' : '0.22em',
           color: 'rgba(200, 228, 255, 1.0)',
           whiteSpace: 'nowrap',
           textTransform: 'uppercase',

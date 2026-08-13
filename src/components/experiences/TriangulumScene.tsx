@@ -3,6 +3,7 @@ import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { sampleImageToParticles } from './sampleImage'
 import { useGalaxyMouse } from './useGalaxyMouse'
+import { framingScale } from '../../lib/framing'
 import imgUrl from '../../assets/triangulum.jpg'
 
 const VS = /* glsl */`
@@ -193,11 +194,12 @@ export default function TriangulumScene() {
 }
 
 function CameraRig() {
-  useFrame(({ camera, clock }) => {
+  useFrame(({ camera, clock, size }) => {
     const t = clock.getElapsedTime()
     camera.position.x = Math.sin(t * 0.018) * 0.55
     camera.position.y = 0.10 + Math.cos(t * 0.014) * 0.14
     camera.position.z = 5.40 + Math.sin(t * 0.022) * 0.28
+    camera.position.multiplyScalar(framingScale(size.width / size.height))
     camera.lookAt(Math.sin(t*0.012)*0.08, 0, 0)
   })
   return null

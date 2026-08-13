@@ -3,6 +3,7 @@ import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { sampleImageToParticles } from './sampleImage'
 import { useGalaxyMouse } from './useGalaxyMouse'
+import { framingScale } from '../../lib/framing'
 import imgUrl from '../../assets/sombrero.jpg'
 
 const VS = /* glsl */`
@@ -199,13 +200,14 @@ export default function SombreroScene() {
 }
 
 function CameraRig() {
-  useFrame(({ camera, clock }) => {
+  useFrame(({ camera, clock, size }) => {
     const t     = clock.getElapsedTime()
     const orbit = t * 0.052
     const tilt  = 0.55 + Math.abs(Math.sin(t * 0.048)) * 1.20
     camera.position.x = Math.cos(orbit) * 5.5
     camera.position.y = tilt
     camera.position.z = Math.sin(orbit) * 5.5
+    camera.position.multiplyScalar(framingScale(size.width / size.height))
     camera.lookAt(0, 0, 0)
   })
   return null

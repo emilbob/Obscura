@@ -1,8 +1,8 @@
 import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
+import { isTouch as IS_TOUCH } from '../../hooks/useViewport'
 
 const fmt = (n: number) => (n >= 0 ? '+' : '') + n.toFixed(3)
-const IS_TOUCH = typeof window !== 'undefined' && window.matchMedia('(pointer: coarse)').matches
 
 export default function CustomCursor() {
   const ringRef   = useRef<HTMLDivElement>(null)
