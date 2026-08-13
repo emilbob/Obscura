@@ -2,6 +2,7 @@ import { useRef, useEffect, lazy, Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { gsap } from 'gsap'
 import { useViewport, isTouch } from '../../hooks/useViewport'
+import AudioToggle from '../ui/AudioToggle'
 
 const SceneMap = {
   andromeda:  lazy(() => import('./AndromedaScene')),
@@ -160,11 +161,13 @@ export default function GalaxyExperience({ galaxy, onReturn }: GalaxyExperienceP
       <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
 
         {/* Galaxy name — top left, character animation */}
-        {/* On mobile it drops below the RETURN button: at 0.46em tracking the
-            longer names (TRIANGULUM) run straight through it on one line. */}
+        {/* Drops below the controls row when the viewport is too narrow to fit
+            both: at 0.46em tracking the longer names (TRIANGULUM) otherwise run
+            straight through it. Short landscape needs this too — 844x390 is
+            wide enough to escape isMobile but not to seat both on one line. */}
         <div style={{
           position: 'absolute',
-          top: vp.isMobile ? '5.6rem' : '2.8rem',
+          top: vp.isMobile || vp.isShort ? '6.2rem' : '2.8rem',
           left: 'clamp(1rem, 4vw, 3.2rem)',
           right: 'clamp(1rem, 4vw, 3.2rem)',
           perspective: '600px',
@@ -173,7 +176,7 @@ export default function GalaxyExperience({ galaxy, onReturn }: GalaxyExperienceP
             fontFamily:    'var(--font-display)',
             fontWeight:    300,
             fontSize:      'clamp(1.6rem, 4.8vw, 5.0rem)',
-            letterSpacing: vp.isMobile ? '0.26em' : '0.46em',
+            letterSpacing: vp.isMobile || vp.isShort ? '0.26em' : '0.46em',
             color:         'rgba(220, 235, 255, 1.0)',
             lineHeight:    1.1,
             margin:        0,
@@ -228,36 +231,47 @@ export default function GalaxyExperience({ galaxy, onReturn }: GalaxyExperienceP
         </div>
       </div>
 
-      {/* Return button — top right */}
-      <button
-        ref={returnRef}
-        onClick={handleReturn}
-        onMouseEnter={() => hoverReturn(true)}
-        onMouseLeave={() => hoverReturn(false)}
+      {/* Controls — top right. This overlay covers TopControls, so the audio
+          toggle has to be repeated here or it disappears mid-experience. */}
+      <div
         style={{
-          position:      'absolute',
-          top:           '2.8rem',
-          right:         'clamp(1rem, 4vw, 3.2rem)',
-          background:    'none',
-          border:        'none',
-          padding:       0,
-          cursor:        'pointer',
-          fontFamily:    'var(--font-mono)',
-          fontSize:      'clamp(0.75rem, 2vw, 1.05rem)',
-          letterSpacing: '0.20em',
-          color:         'rgba(180, 215, 255, 0.95)',
-          textTransform: 'uppercase',
-          opacity:       0,
-          zIndex:        10,
-          pointerEvents: 'auto',
-          minHeight:     44,   // tap target
-          display:       'flex',
-          alignItems:    'center',
+          position:   'absolute',
+          top:        '2.8rem',
+          right:      'clamp(1rem, 4vw, 3.2rem)',
+          display:    'flex',
+          alignItems: 'center',
+          gap:        'clamp(0.6rem, 2vw, 1.2rem)',
+          zIndex:     10,
         }}
-        aria-label="Return to observatory"
       >
-        ← RETURN
-      </button>
+        <AudioToggle style={{ position: 'relative', zIndex: 'auto' }} />
+
+        <button
+          ref={returnRef}
+          onClick={handleReturn}
+          onMouseEnter={() => hoverReturn(true)}
+          onMouseLeave={() => hoverReturn(false)}
+          style={{
+            background:    'none',
+            border:        'none',
+            padding:       0,
+            cursor:        'pointer',
+            fontFamily:    'var(--font-mono)',
+            fontSize:      'clamp(0.75rem, 2vw, 1.05rem)',
+            letterSpacing: '0.20em',
+            color:         'rgba(180, 215, 255, 0.95)',
+            textTransform: 'uppercase',
+            opacity:       0,
+            pointerEvents: 'auto',
+            minHeight:     44,   // tap target
+            display:       'flex',
+            alignItems:    'center',
+          }}
+          aria-label="Return to observatory"
+        >
+          ← RETURN
+        </button>
+      </div>
     </div>
   )
 }

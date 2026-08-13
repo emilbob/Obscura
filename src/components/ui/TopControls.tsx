@@ -1,6 +1,7 @@
 import { useRef, useEffect } from 'react'
 import { gsap } from 'gsap'
 import { useViewport } from '../../hooks/useViewport'
+import AudioToggle from './AudioToggle'
 
 interface TopControlsProps {
   onScrollTop: () => void
@@ -112,6 +113,16 @@ export default function TopControls({ onScrollTop }: TopControlsProps) {
       >
         ↑
       </button>
+
+      {/* Ambient audio — bottom left, mirroring the scroll-top control.
+          On short viewports the chapter rail reaches far enough down that the
+          toggle's 60px box would touch its lowest dots, so it steps inboard. */}
+      <AudioToggle
+        style={{
+          bottom: 'calc(2.5rem + env(safe-area-inset-bottom))',
+          left:   vp.isShort ? '4rem' : vp.isMobile ? '0.5rem' : '2.5rem',
+        }}
+      />
     </>
   )
 }

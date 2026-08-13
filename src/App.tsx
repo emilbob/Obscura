@@ -16,23 +16,7 @@ import TopControls from './components/ui/TopControls'
 import ChapterIndicator from './components/ui/ChapterIndicator'
 import GalaxyExperience from './components/experiences/GalaxyExperience'
 import { useViewport, isTouch } from './hooks/useViewport'
-
-// Module-level singleton — lives outside React, unaffected by StrictMode double-mount
-const ambience = new Audio('/drone-atmospheric-ambience-betacut-1-01-01.mp3')
-ambience.loop   = true
-ambience.volume = 0
-
-let ambienceStarted = false
-
-function startAmbience() {
-  if (ambienceStarted) return
-  ambienceStarted = true
-  ambience.play().then(() => {
-    gsap.to(ambience, { volume: 0.38, duration: 5.0, ease: 'power2.out' })
-  }).catch(() => {
-    ambienceStarted = false
-  })
-}
+import { startAmbience } from './lib/ambience'
 
 export default function App() {
   const vp                = useViewport()
