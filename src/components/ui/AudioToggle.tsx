@@ -1,10 +1,15 @@
-import { useRef, useEffect, useState, useCallback } from 'react'
+import { useRef, useEffect, useCallback, useSyncExternalStore } from 'react'
 import { gsap } from 'gsap'
-import { isMuted, setMuted } from '../../lib/ambience'
+import { isMuted, setMuted, subscribeMuted } from '../../lib/ambience'
 
+// Geometry is in viewBox units; the rendered size below scales the whole glyph
+// — bars and gaps included — so it thins out proportionally on small screens.
 const BOX_W = 48
 const BOX_H = 44
 const BAR_W = 6.5
+
+// Fluid 32px (320px viewport) → 48px (1440px and up), interpolated linearly.
+const ICON_W = 'clamp(32px, calc(27.4px + 1.43vw), 48px)'
 
 // Resting bar heights + loop durations — deliberately unequal so the meter
 // reads as live signal rather than a synced animation.
@@ -29,7 +34,9 @@ interface AudioToggleProps {
 }
 
 export default function AudioToggle({ style }: AudioToggleProps) {
-  const [muted, setMutedState] = useState(isMuted)
+  // Shared across every mounted toggle, so the one behind a galaxy overlay
+  // cannot drift out of sync with the one on top of it.
+  const muted    = useSyncExternalStore(subscribeMuted, isMuted, isMuted)
   const btnRef   = useRef<HTMLButtonElement>(null)
   const barRefs  = useRef<(SVGRectElement | null)[]>([])
   const loopsRef = useRef<gsap.core.Tween[]>([])
@@ -74,13 +81,7 @@ export default function AudioToggle({ style }: AudioToggleProps) {
     return () => { loopsRef.current.forEach(t => t.kill()) }
   }, [muted])
 
-  const toggle = useCallback(() => {
-    setMutedState(prev => {
-      const next = !prev
-      setMuted(next)
-      return next
-    })
-  }, [])
+  const toggle = useCallback(() => setMuted(!isMuted()), [])
 
   const hover = (enter: boolean) =>
     gsap.to(btnRef.current, { opacity: enter ? 1 : REST_OPACITY, duration: 0.25, ease: 'power2.out' })
@@ -104,8 +105,9 @@ export default function AudioToggle({ style }: AudioToggleProps) {
         pointerEvents:  'auto',
         userSelect:     'none',
         zIndex:         30,
-        minWidth:       60,
-        minHeight:      60,
+        // hit target stays at the 44px minimum even as the glyph shrinks
+        minWidth:       44,
+        minHeight:      44,
         display:        'flex',
         alignItems:     'center',
         justifyContent: 'center',
@@ -114,11 +116,12 @@ export default function AudioToggle({ style }: AudioToggleProps) {
     >
       <svg
         viewBox={`0 0 ${BOX_W} ${BOX_H}`}
-        width={BOX_W}
-        height={BOX_H}
         aria-hidden
         style={{
-          overflow: 'visible',
+          width:       ICON_W,
+          height:      'auto',
+          aspectRatio: `${BOX_W} / ${BOX_H}`,
+          overflow:    'visible',
           // same luminous accent the rest of the chrome carries
           filter: 'drop-shadow(0 0 8px rgba(74,158,255,0.6))',
         }}
