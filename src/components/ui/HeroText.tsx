@@ -1,5 +1,6 @@
 import { useRef, useEffect } from "react";
 import { gsap } from "gsap";
+import { useViewport } from "../../hooks/useViewport";
 
 const TITLE = "OBSCURA";
 
@@ -9,6 +10,7 @@ interface HeroTextProps {
 }
 
 export default function HeroText({ delay = 5.2, hide = false }: HeroTextProps) {
+  const vp            = useViewport();
   const containerRef  = useRef<HTMLDivElement>(null);
   const charRefs      = useRef<(HTMLSpanElement | null)[]>([]);
   const subtitleRef   = useRef<HTMLParagraphElement>(null);
@@ -99,7 +101,10 @@ export default function HeroText({ delay = 5.2, hide = false }: HeroTextProps) {
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
-        gap: "1.2rem",
+        // Landscape phones have ~320px of height to spend. Sized on width
+        // alone the centred hero rises into the chapter label in the top left,
+        // so on short viewports it is driven by height instead.
+        gap: vp.isShort ? "0.55rem" : "1.2rem",
         pointerEvents: "none",
         userSelect: "none",
         perspective: "800px",
@@ -110,8 +115,10 @@ export default function HeroText({ delay = 5.2, hide = false }: HeroTextProps) {
         style={{
           fontFamily: "var(--font-display)",
           fontWeight: 300,
-          fontSize: "clamp(2.8rem, 8.5vw, 8.5rem)",
-          letterSpacing: "0.22em",
+          fontSize: vp.isShort
+            ? "clamp(1.6rem, 11vh, 3rem)"
+            : "clamp(2.8rem, 8.5vw, 8.5rem)",
+          letterSpacing: vp.isShort ? "0.16em" : "0.22em",
           color: "var(--star-white)",
           lineHeight: 1,
           whiteSpace: "nowrap",
@@ -147,8 +154,10 @@ export default function HeroText({ delay = 5.2, hide = false }: HeroTextProps) {
         ref={subtitleRef}
         style={{
           fontFamily: "var(--font-mono)",
-          fontSize: "clamp(0.82rem, 1.8vw, 1.4rem)",
-          letterSpacing: "0.28em",
+          fontSize: vp.isShort
+            ? "clamp(0.7rem, 3vh, 0.95rem)"   // floor keeps it above ~11px
+            : "clamp(0.82rem, 1.8vw, 1.4rem)",
+          letterSpacing: vp.isShort ? "0.2em" : "0.28em",
           color: "rgba(200, 216, 240, 0.92)",
           textTransform: "uppercase",
         }}

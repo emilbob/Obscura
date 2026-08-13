@@ -6,6 +6,14 @@ interface ScrollIndicatorProps {
   hide?:  boolean
 }
 
+// Fluid between a 320px and a 1440px viewport, on the same curve as the audio
+// toggle and the scroll-top arrow so all three shrink together. `letterSpacing`
+// is in em, so it tracks the font size on its own.
+const LABEL_SIZE = 'clamp(11.5px, calc(10px + 0.47vw), 1.05rem)'
+const LINE_H     = 'clamp(32px, calc(27.4px + 1.43vw), 48px)'
+const LINE_W     = 'clamp(1.5px, calc(1.36px + 0.045vw), 2px)'
+const STACK_GAP  = 'clamp(8.8px, calc(7.65px + 0.36vw), 0.8rem)'
+
 export default function ScrollIndicator({ delay = 8.5, hide = false }: ScrollIndicatorProps) {
   const ref = useRef<HTMLDivElement>(null)
   const lineRef = useRef<HTMLDivElement>(null)
@@ -75,7 +83,7 @@ export default function ScrollIndicator({ delay = 8.5, hide = false }: ScrollInd
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
-        gap: '0.8rem',
+        gap: STACK_GAP,
         pointerEvents: 'none',
         userSelect: 'none',
         opacity: 0,
@@ -84,7 +92,7 @@ export default function ScrollIndicator({ delay = 8.5, hide = false }: ScrollInd
       <span
         style={{
           fontFamily: 'var(--font-mono)',
-          fontSize: '1.05rem',
+          fontSize: LABEL_SIZE,
           letterSpacing: '0.18em',
           color: 'rgba(180, 210, 255, 0.95)',
           textTransform: 'uppercase',
@@ -94,8 +102,8 @@ export default function ScrollIndicator({ delay = 8.5, hide = false }: ScrollInd
       </span>
       <div
         style={{
-          width: 2,
-          height: 48,
+          width: LINE_W,
+          height: LINE_H,
           background: 'rgba(180, 210, 255, 0.25)',
           overflow: 'hidden',
         }}
