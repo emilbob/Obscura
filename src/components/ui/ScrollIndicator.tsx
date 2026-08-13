@@ -9,10 +9,10 @@ interface ScrollIndicatorProps {
 // Fluid between a 320px and a 1440px viewport, on the same curve as the audio
 // toggle and the scroll-top arrow so all three shrink together. `letterSpacing`
 // is in em, so it tracks the font size on its own.
-const LABEL_SIZE = 'clamp(11.5px, calc(10px + 0.47vw), 1.05rem)'
-const LINE_H     = 'clamp(32px, calc(27.4px + 1.43vw), 48px)'
-const LINE_W     = 'clamp(1.5px, calc(1.36px + 0.045vw), 2px)'
-const STACK_GAP  = 'clamp(8.8px, calc(7.65px + 0.36vw), 0.8rem)'
+const LABEL_SIZE = 'clamp(13px, calc(11.9px + 0.34vw), 1.05rem)'
+const LINE_H     = 'clamp(38px, calc(35.14px + 0.89vw), 48px)'
+const LINE_W     = 'clamp(1.7px, calc(1.61px + 0.027vw), 2px)'
+const STACK_GAP  = 'clamp(10px, calc(9.2px + 0.25vw), 0.8rem)'
 
 export default function ScrollIndicator({ delay = 8.5, hide = false }: ScrollIndicatorProps) {
   const ref = useRef<HTMLDivElement>(null)

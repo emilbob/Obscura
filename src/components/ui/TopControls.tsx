@@ -100,9 +100,9 @@ export default function TopControls({ onScrollTop }: TopControlsProps) {
           // clear of the home indicator / browser bottom bar
           bottom: 'calc(2.5rem + env(safe-area-inset-bottom))',
           right: vp.isMobile ? '1rem' : '2.8rem',
-          // fluid 26px (320px viewport) → 38.4px (1440px and up), matching the
+          // fluid 31px (320px viewport) → 38.4px (1440px and up), matching the
           // audio toggle's scale so the two bottom controls stay a pair
-          fontSize: 'clamp(26px, calc(22.5px + 1.11vw), 2.4rem)',
+          fontSize: 'clamp(31px, calc(28.9px + 0.66vw), 2.4rem)',
           lineHeight: 1,
           zIndex: 30,
           minWidth: 44,
