@@ -407,8 +407,9 @@ function GalaxyStar({ id, name, top, left, compact = false, onSelect }: GalaxySt
           transform: 'translateX(-50%)',
           marginTop: '0.65rem',
           fontFamily: 'var(--font-mono)',
-          // narrower labels keep the outermost stars' names off the edges
-          fontSize: compact ? '0.64rem' : '0.76rem',
+          // narrower labels keep the outermost stars' names off the edges;
+          // 0.7rem is the floor that stays readable (0.64 rendered at 10.2px)
+          fontSize: compact ? '0.7rem' : '0.76rem',
           letterSpacing: compact ? '0.14em' : '0.22em',
           color: 'rgba(200, 228, 255, 1.0)',
           whiteSpace: 'nowrap',

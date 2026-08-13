@@ -1,5 +1,6 @@
 import { useRef, useEffect } from 'react'
 import { gsap } from 'gsap'
+import { useViewport } from '../../hooks/useViewport'
 
 interface ReorientationQueryProps {
   visible: boolean
@@ -8,6 +9,7 @@ interface ReorientationQueryProps {
 const QUESTION = 'HAVE WE BEEN LOOKING IN THE WRONG PLACE ALL ALONG?'
 
 export default function ReorientationQuery({ visible }: ReorientationQueryProps) {
+  const vp           = useViewport()
   const containerRef = useRef<HTMLDivElement>(null)
   const tlRef        = useRef<gsap.core.Timeline | null>(null)
 
@@ -36,7 +38,9 @@ export default function ReorientationQuery({ visible }: ReorientationQueryProps)
       ref={containerRef}
       style={{
         position: 'fixed',
-        bottom: '32vh',
+        // sits higher on a landscape phone, where 32vh puts it on top of the
+        // scroll hint rather than above it
+        bottom: vp.isShort ? '46vh' : '32vh',
         left: 0,
         right: 0,
         display: 'flex',

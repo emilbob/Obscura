@@ -249,7 +249,9 @@ function Corner({ pos, children }: { pos: string; children: string }) {
   const style: React.CSSProperties = {
     position: 'absolute',
     fontFamily: 'var(--font-mono)',
-    fontSize: 'clamp(0.55rem, 1.8vw, 1.10rem)',
+    // floor raised from 0.55rem: that bottomed out at 8.8px on every phone,
+    // well under a readable size for mono at this opacity
+    fontSize: 'clamp(0.68rem, 1.8vw, 1.10rem)',
     letterSpacing: '0.14em',
     color: 'rgba(200, 216, 240, 0.35)',
     pointerEvents: 'none',
