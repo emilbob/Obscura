@@ -8,8 +8,8 @@ const BOX_W = 48
 const BOX_H = 44
 const BAR_W = 6.5
 
-// Fluid 32px (320px viewport) → 48px (1440px and up), interpolated linearly.
-const ICON_W = 'clamp(32px, calc(27.4px + 1.43vw), 48px)'
+// Fluid 38px (320px viewport) → 48px (1440px and up), interpolated linearly.
+const ICON_W = 'clamp(38px, calc(35.14px + 0.89vw), 48px)'
 
 // Resting bar heights + loop durations — deliberately unequal so the meter
 // reads as live signal rather than a synced animation.
