@@ -2,6 +2,7 @@ import { useRef } from 'react'
 import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { useMousePosition } from '../../hooks/useMousePosition'
+import { framingScale } from '../../lib/framing'
 
 interface CameraRigProps {
   scrollRef: React.MutableRefObject<number>
@@ -15,9 +16,13 @@ export default function CameraRig({ scrollRef }: CameraRigProps) {
   const targetPos = useRef(new THREE.Vector3(0, 0, 5))
   const targetRot = useRef({ x: 0, y: 0, z: 0 })
 
-  useFrame(({ camera, clock }) => {
+  useFrame(({ camera, clock, size }) => {
     const t = clock.getElapsedTime()
     const s = scrollRef.current
+
+    // Partial pullback: the instrument chrome is abstract enough to survive a
+    // little crop, and a full correction would leave it tiny on a phone.
+    const fit = framingScale(size.width / size.height, 0.6, 1.85)
 
     // ── Chapter progress (bands × 0.85 of 2000vh) ───────────────────────────
     const ch2 = ss(c1((s - 0.085) / 0.196))   // Mapping
@@ -47,7 +52,7 @@ export default function CameraRig({ scrollRef }: CameraRigProps) {
         + ch5 * 0.22 + ch6 * 0.32
         + ch7 * 0.12,
       // Ch7: very slow further pullback — watching from a great distance
-      5 - ch2 * 3.2 + ch3 * 0.45 + ch4 * 1.80 + ch5 * 1.40 + ch6 * 0.60 + ch7 * 0.80,
+      (5 - ch2 * 3.2 + ch3 * 0.45 + ch4 * 1.80 + ch5 * 1.40 + ch6 * 0.60 + ch7 * 0.80) * fit,
     )
 
     targetRot.current.x = -mouse.current.y * 0.10 * mouse_w + Math.sin(t * 0.07) * 0.005 * (1 - ch7)

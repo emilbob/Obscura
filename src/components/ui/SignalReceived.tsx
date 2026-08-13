@@ -1,14 +1,16 @@
 import { useRef, useEffect } from 'react'
 import { gsap } from 'gsap'
+import { useViewport } from '../../hooks/useViewport'
 
 interface SignalReceivedProps {
   visible: boolean
 }
 
 const TITLE = 'SIGNAL RECEIVED'
-const isMobile = window.innerWidth < 768
 
 export default function SignalReceived({ visible }: SignalReceivedProps) {
+  const vp           = useViewport()
+  const isMobile     = vp.isMobile
   const containerRef = useRef<HTMLDivElement>(null)
   const charRefs     = useRef<(HTMLSpanElement | null)[]>([])
   const subRef       = useRef<HTMLDivElement>(null)
@@ -66,7 +68,7 @@ export default function SignalReceived({ visible }: SignalReceivedProps) {
         style={{
           fontFamily: 'var(--font-display)',
           fontWeight: 300,
-          fontSize: isMobile ? 'clamp(2.0rem, 6.5vw, 6.2rem)' : 'clamp(2.5rem, 6.5vw, 6.2rem)',
+          fontSize: isMobile ? 'clamp(1.7rem, 8vw, 6.2rem)' : 'clamp(2.5rem, 6.5vw, 6.2rem)',
           letterSpacing: isMobile ? '0.10em' : '0.22em',
           color: 'var(--star-white)',
           lineHeight: 1.15,
@@ -75,6 +77,7 @@ export default function SignalReceived({ visible }: SignalReceivedProps) {
           flexWrap: 'wrap',
           justifyContent: 'center',
           margin: 0,
+          padding: '0 1.25rem',
         }}
       >
         {TITLE.split('').map((char, i) => (

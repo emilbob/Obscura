@@ -15,9 +15,7 @@ import SilenceChapter from './components/ui/SilenceChapter'
 import TopControls from './components/ui/TopControls'
 import ChapterIndicator from './components/ui/ChapterIndicator'
 import GalaxyExperience from './components/experiences/GalaxyExperience'
-
-const isMobile = window.innerWidth < 768
-const isTouch  = window.matchMedia('(pointer: coarse)').matches
+import { useViewport, isTouch } from './hooks/useViewport'
 
 // Module-level singleton — lives outside React, unaffected by StrictMode double-mount
 const ambience = new Audio('/drone-atmospheric-ambience-betacut-1-01-01.mp3')
@@ -37,6 +35,7 @@ function startAmbience() {
 }
 
 export default function App() {
+  const vp                = useViewport()
   const scrollProgressRef = useRef(0)
   const ch7ProgressRef    = useRef(0)
   const sceneStartRef     = useRef<(() => void) | null>(null)
@@ -139,7 +138,7 @@ export default function App() {
           style={{ width: '100%', height: '100%' }}
           camera={{ position: [0, 0, 5], fov: 58, near: 0.1, far: 2000 }}
           gl={{ antialias: false, powerPreference: 'high-performance' }}
-          dpr={[1, isMobile ? 1 : 1.5]}
+          dpr={[1, vp.isMobile ? 1 : 1.5]}
         >
           <Scene scrollRef={scrollProgressRef} startRef={sceneStartRef} />
         </Canvas>

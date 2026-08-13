@@ -1,9 +1,7 @@
 import { useRef, useEffect, lazy, Suspense } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { gsap } from 'gsap'
-
-const isMobile = window.innerWidth < 768
-const isTouch  = window.matchMedia('(pointer: coarse)').matches
+import { useViewport, isTouch } from '../../hooks/useViewport'
 
 const SceneMap = {
   andromeda:  lazy(() => import('./AndromedaScene')),
@@ -57,6 +55,7 @@ interface GalaxyExperienceProps {
 }
 
 export default function GalaxyExperience({ galaxy, onReturn }: GalaxyExperienceProps) {
+  const vp          = useViewport()
   const wrapRef     = useRef<HTMLDivElement>(null)
   const charRefs    = useRef<(HTMLSpanElement | null)[]>([])
   const metaRef     = useRef<HTMLDivElement>(null)
@@ -148,7 +147,7 @@ export default function GalaxyExperience({ galaxy, onReturn }: GalaxyExperienceP
         <Canvas
           camera={{ position: [0, 3, 5], fov: 55, near: 0.1, far: 500 }}
           gl={{ antialias: false, powerPreference: 'high-performance' }}
-          dpr={[1, isMobile ? 1 : 1.5]}
+          dpr={[1, vp.isMobile ? 1 : 1.5]}
           style={{ width: '100%', height: '100%' }}
         >
           <Suspense fallback={null}>
@@ -161,21 +160,25 @@ export default function GalaxyExperience({ galaxy, onReturn }: GalaxyExperienceP
       <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
 
         {/* Galaxy name — top left, character animation */}
+        {/* On mobile it drops below the RETURN button: at 0.46em tracking the
+            longer names (TRIANGULUM) run straight through it on one line. */}
         <div style={{
           position: 'absolute',
-          top: '2.8rem',
+          top: vp.isMobile ? '5.6rem' : '2.8rem',
           left: 'clamp(1rem, 4vw, 3.2rem)',
+          right: 'clamp(1rem, 4vw, 3.2rem)',
           perspective: '600px',
         }}>
           <h1 style={{
             fontFamily:    'var(--font-display)',
             fontWeight:    300,
             fontSize:      'clamp(1.6rem, 4.8vw, 5.0rem)',
-            letterSpacing: '0.46em',
+            letterSpacing: vp.isMobile ? '0.26em' : '0.46em',
             color:         'rgba(220, 235, 255, 1.0)',
-            lineHeight:    1,
+            lineHeight:    1.1,
             margin:        0,
             display:       'flex',
+            flexWrap:      'wrap',
           }}>
             {meta.name.split('').map((ch, i) => (
               <span
@@ -209,7 +212,7 @@ export default function GalaxyExperience({ galaxy, onReturn }: GalaxyExperienceP
           ref={bodyRef}
           style={{
             position:      'absolute',
-            bottom:        '3.8rem',
+            bottom:        'calc(3.8rem + env(safe-area-inset-bottom))',
             left:          'clamp(1rem, 4vw, 3.2rem)',
             maxWidth:      'min(36rem, calc(100vw - clamp(2rem, 8vw, 6.4rem)))',
             fontFamily:    'var(--font-display)',
@@ -247,6 +250,9 @@ export default function GalaxyExperience({ galaxy, onReturn }: GalaxyExperienceP
           opacity:       0,
           zIndex:        10,
           pointerEvents: 'auto',
+          minHeight:     44,   // tap target
+          display:       'flex',
+          alignItems:    'center',
         }}
         aria-label="Return to observatory"
       >

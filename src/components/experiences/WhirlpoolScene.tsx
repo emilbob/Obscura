@@ -3,6 +3,7 @@ import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import { sampleImageToParticles } from './sampleImage'
 import { useGalaxyMouse } from './useGalaxyMouse'
+import { framingScale } from '../../lib/framing'
 import imgUrl from '../../assets/whirlpoll.jpg'
 
 const VS = /* glsl */`
@@ -197,7 +198,7 @@ export default function WhirlpoolScene() {
 }
 
 function CameraRig() {
-  useFrame(({ camera, clock }) => {
+  useFrame(({ camera, clock, size }) => {
     const t     = clock.getElapsedTime()
     const orbit = t * 0.095
     const dist  = 3.6 + Math.sin(t * 0.060) * 1.10
@@ -205,6 +206,7 @@ function CameraRig() {
     camera.position.x = Math.cos(orbit) * dist + Math.sin(t*0.72)*shk
     camera.position.y = 2.40 + Math.sin(t * 0.090) * 0.55
     camera.position.z = Math.sin(orbit) * dist + Math.sin(t*1.30)*shk
+    camera.position.multiplyScalar(framingScale(size.width / size.height))
     camera.lookAt(Math.sin(t*0.45)*0.05, 0, 0)
   })
   return null

@@ -10,15 +10,25 @@ export default function ScrollIndicator({ delay = 8.5, hide = false }: ScrollInd
   const ref = useRef<HTMLDivElement>(null)
   const lineRef = useRef<HTMLDivElement>(null)
   const hiddenRef = useRef(false)
+  // Read by the intro tween when it finally fires, seconds after mount.
+  const hideRef = useRef(hide)
+  const introRef = useRef<gsap.core.Tween | null>(null)
 
+  // Declared first so it runs before the intro effect on mount — which is what
+  // lets hideRef be correct by the time the intro tween is created.
   useEffect(() => {
+    hideRef.current = hide
     if (!ref.current) return
     if (hide) {
       hiddenRef.current = true
-      gsap.to(ref.current, { opacity: 0, duration: 1.2, ease: 'power2.inOut' })
+      // The intro reveal is delayed by several seconds; if the reader is
+      // already past this point (fast scroll, or a reload that restored the
+      // scroll position) it would otherwise fire later and undo this fade.
+      introRef.current?.kill()
+      gsap.to(ref.current, { opacity: 0, duration: 1.2, ease: 'power2.inOut', overwrite: true })
     } else if (hiddenRef.current) {
       hiddenRef.current = false
-      gsap.to(ref.current, { opacity: 1, duration: 1.0, ease: 'power2.out' })
+      gsap.to(ref.current, { opacity: 1, duration: 1.0, ease: 'power2.out', overwrite: true })
     }
   }, [hide])
 
@@ -28,10 +38,14 @@ export default function ScrollIndicator({ delay = 8.5, hide = false }: ScrollInd
     if (!el || !line) return
 
     gsap.set(el, { opacity: 0 })
-    gsap.to(el, { opacity: 1, duration: 1.0, delay, ease: 'power2.out' })
+    introRef.current = gsap.to(el, {
+      opacity: 1, duration: 1.0, delay, ease: 'power2.out',
+      // Mounted already hidden — stay that way.
+      onStart: () => { if (hideRef.current) introRef.current?.kill() },
+    })
 
     // Perpetual scroll line animation
-    gsap.to(line, {
+    const lineTween = gsap.to(line, {
       scaleY: 0,
       transformOrigin: 'top center',
       duration: 1.2,
@@ -43,6 +57,11 @@ export default function ScrollIndicator({ delay = 8.5, hide = false }: ScrollInd
         gsap.set(line, { scaleY: 1, transformOrigin: 'bottom center' })
       },
     })
+
+    return () => {
+      introRef.current?.kill()
+      lineTween.kill()
+    }
   }, [delay])
 
   return (
@@ -50,7 +69,7 @@ export default function ScrollIndicator({ delay = 8.5, hide = false }: ScrollInd
       ref={ref}
       style={{
         position: 'fixed',
-        bottom: '2.8rem',
+        bottom: 'calc(2.8rem + env(safe-area-inset-bottom))',
         left: '50%',
         transform: 'translateX(-50%)',
         display: 'flex',
