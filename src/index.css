@@ -43,6 +43,9 @@ body {
   color: var(--star-white);
 }
 
-@media (pointer: coarse) {
+/* Restore the native cursor wherever the custom one is suppressed. CustomCursor
+   also sets this from JS, which covers the case CSS cannot express: a
+   touchscreen reporting a fine pointer. */
+@media (pointer: coarse), (hover: none) {
   body { cursor: auto; }
 }

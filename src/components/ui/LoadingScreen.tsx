@@ -145,7 +145,9 @@ export default function LoadingScreen({ onComplete }: LoadingScreenProps) {
       <Corner pos="top-right">DEC +22° 00′ 52″</Corner>
 
       {/* Precision dial */}
-      <svg viewBox="0 0 200 200" style={{ overflow: 'visible', width: 'min(380px, 82vw)', height: 'min(380px, 82vw)' }}>
+      {/* 52vh cap: sized on width alone the dial overflows a landscape phone,
+          pushing the status line and ENTER prompt off the bottom edge. */}
+      <svg viewBox="0 0 200 200" style={{ overflow: 'visible', width: 'min(380px, 82vw, 52vh)', height: 'min(380px, 82vw, 52vh)' }}>
         {/* Outer decorative ring */}
         <circle cx="100" cy="100" r="90" stroke="rgba(74,158,255,0.06)" strokeWidth="1" fill="none" />
 

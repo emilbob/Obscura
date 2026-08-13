@@ -1,11 +1,23 @@
 import { useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
-import { isTouch as IS_TOUCH } from '../../hooks/useViewport'
+import { useIsPointerDevice } from '../../hooks/useViewport'
 
 const fmt = (n: number) => (n >= 0 ? '+' : '') + n.toFixed(3)
 
 export default function CustomCursor() {
+  // Mouse/trackpad only — a follower ring and a coordinate readout mean
+  // nothing when the pointer is a finger.
+  const isPointer = useIsPointerDevice()
   const ringRef   = useRef<HTMLDivElement>(null)
+
+  // The stylesheet hides the native cursor and only restores it for coarse
+  // pointers, so any device where we suppress the custom one but the CSS does
+  // not (a tablet with a trackpad) would be left with no cursor at all.
+  useEffect(() => {
+    document.body.style.cursor = isPointer ? 'none' : 'auto'
+    return () => { document.body.style.cursor = '' }
+  }, [isPointer])
+
   const dotRef    = useRef<HTMLDivElement>(null)
   const coordRef  = useRef<HTMLDivElement>(null)
   const xValRef   = useRef<HTMLSpanElement>(null)
@@ -14,7 +26,7 @@ export default function CustomCursor() {
   const counter   = useRef({ x: 0, y: 0 })
 
   useEffect(() => {
-    if (IS_TOUCH) return
+    if (!isPointer) return
     const ring  = ringRef.current
     const dot   = dotRef.current
     const coord = coordRef.current
@@ -88,9 +100,9 @@ export default function CustomCursor() {
         el.removeEventListener('mouseleave', onLeaveEl)
       })
     }
-  }, [])
+  }, [isPointer])
 
-  if (IS_TOUCH) return null
+  if (!isPointer) return null
   return (
     <>
       {/* Lagging outer ring */}
