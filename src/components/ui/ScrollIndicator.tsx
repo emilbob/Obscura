@@ -94,7 +94,8 @@ export default function ScrollIndicator({ delay = 8.5, hide = false }: ScrollInd
           fontFamily: 'var(--font-mono)',
           fontSize: LABEL_SIZE,
           letterSpacing: '0.18em',
-          color: 'rgba(180, 210, 255, 0.95)',
+          color: 'rgba(255, 255, 255, 1)',
+          textShadow: '0 2px 4px rgba(0,0,0,1), 0 0 10px rgba(0,0,0,1), 0 0 28px rgba(0,0,0,0.9)',
           textTransform: 'uppercase',
         }}
       >
@@ -106,6 +107,7 @@ export default function ScrollIndicator({ delay = 8.5, hide = false }: ScrollInd
           height: LINE_H,
           background: 'rgba(180, 210, 255, 0.25)',
           overflow: 'hidden',
+          filter: 'drop-shadow(0 0 4px rgba(0,0,0,0.9))',
         }}
       >
         <div

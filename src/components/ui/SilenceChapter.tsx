@@ -208,6 +208,7 @@ export default function SilenceChapter({ progressRef, visible, onSelect }: Silen
           // the left so the word sits optically centred
           paddingLeft: headingTracking,
           color: 'rgba(220, 235, 255, 1.0)',
+          textShadow: '0 4px 24px rgba(0,0,0,0.65), 0 0 12px rgba(0,0,0,0.5)',
           lineHeight: 1,
           whiteSpace: 'nowrap',
           display: 'flex',
