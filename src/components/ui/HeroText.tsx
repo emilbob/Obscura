@@ -160,7 +160,7 @@ export default function HeroText({ delay = 5.2, hide = false }: HeroTextProps) {
             : "clamp(0.82rem, 1.8vw, 1.4rem)",
           letterSpacing: vp.isShort ? "0.2em" : "0.28em",
           color: "rgba(255, 255, 255, 1)",
-          textShadow: "0 2px 4px rgba(0,0,0,1), 0 0 10px rgba(0,0,0,1), 0 0 28px rgba(0,0,0,0.9)",
+          textShadow: "0 4px 24px rgba(0,0,0,0.65), 0 0 12px rgba(0,0,0,0.5)",
           textTransform: "uppercase",
         }}
       >

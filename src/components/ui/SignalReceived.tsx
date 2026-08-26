@@ -110,7 +110,7 @@ export default function SignalReceived({ visible }: SignalReceivedProps) {
           fontSize: 'clamp(0.72rem, 1.4vw, 1.1rem)',
           letterSpacing: '0.18em',
           color: 'rgba(255, 255, 255, 1.0)',
-          textShadow: '0 2px 4px rgba(0,0,0,1), 0 0 10px rgba(0,0,0,1), 0 0 28px rgba(0,0,0,0.9)',
+          textShadow: '0 4px 24px rgba(0,0,0,0.65), 0 0 12px rgba(0,0,0,0.5)',
           opacity: 0,
           textTransform: 'uppercase',
           textAlign: 'center',

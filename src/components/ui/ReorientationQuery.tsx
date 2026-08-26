@@ -65,7 +65,7 @@ export default function ReorientationQuery({ visible }: ReorientationQueryProps)
         fontSize: 'clamp(0.88rem, 1.6vw, 1.15rem)',
         letterSpacing: '0.28em',
         color: 'rgba(255, 255, 255, 1)',
-        textShadow: '0 2px 4px rgba(0,0,0,1), 0 0 10px rgba(0,0,0,1), 0 0 28px rgba(0,0,0,0.9)',
+        textShadow: '0 4px 24px rgba(0,0,0,0.65), 0 0 12px rgba(0,0,0,0.5)',
         textTransform: 'uppercase',
         textAlign: 'center',
         margin: 0,
