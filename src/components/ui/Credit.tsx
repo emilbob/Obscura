@@ -91,8 +91,7 @@ export default function Credit({ visible }: CreditProps) {
           color: 'rgba(160, 190, 230, 0.5)',
         }}
       >
-        Space, mathematics, physics, and code, all chase
-        the same thing — shape, found in the unknown.
+        Space explorer — building instruments out of code.
       </div>
     </div>
   )
