@@ -14,6 +14,7 @@ import ReorientationQuery from './components/ui/ReorientationQuery'
 import SilenceChapter from './components/ui/SilenceChapter'
 import TopControls from './components/ui/TopControls'
 import ChapterIndicator from './components/ui/ChapterIndicator'
+import Credit from './components/ui/Credit'
 import GalaxyExperience from './components/experiences/GalaxyExperience'
 import { useViewport, isTouch } from './hooks/useViewport'
 import { startAmbience } from './lib/ambience'
@@ -137,6 +138,7 @@ export default function App() {
           <ReorientationQuery visible={chapter === 5} />
           <SignalReceived visible={chapter === 6} />
           <SilenceChapter progressRef={ch7ProgressRef} visible={chapter === 7} onSelect={handleGalaxySelect} />
+          <Credit visible={chapter === 7} />
           <TopControls onScrollTop={scrollToTop} />
           <ChapterIndicator chapter={chapter} delay={chapterDelayRef.current} />
         </div>

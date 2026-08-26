@@ -304,12 +304,31 @@ interface GalaxyStarProps {
 }
 
 function GalaxyStar({ id, name, top, left, compact = false, onSelect }: GalaxyStarProps) {
-  const dotRef   = useRef<HTMLDivElement>(null)
-  const labelRef = useRef<HTMLDivElement>(null)
-  const ringRef  = useRef<HTMLDivElement>(null)
-  const pulseRef = useRef<gsap.core.Tween | null>(null)
+  const dotRef       = useRef<HTMLDivElement>(null)
+  const labelRef     = useRef<HTMLDivElement>(null)
+  const ringRef      = useRef<HTMLDivElement>(null)
+  const pulseRef     = useRef<gsap.core.Tween | null>(null)
+  // Idle breathing loop — signals the dot is clickable before the reader
+  // ever hovers it. Paused during hover/click so it doesn't fight those
+  // tweens over the same scale/opacity properties.
+  const idlePulseRef = useRef<gsap.core.Tween | null>(null)
+
+  const startIdlePulse = () => {
+    idlePulseRef.current = gsap.to(dotRef.current, {
+      scale: 1.9, opacity: 1,
+      boxShadow: '0 0 12px rgba(74,158,255,1.0), 0 0 32px rgba(74,158,255,0.55)',
+      duration: 1.1, ease: 'sine.inOut',
+      repeat: -1, yoyo: true,
+    })
+  }
+
+  useEffect(() => {
+    startIdlePulse()
+    return () => { idlePulseRef.current?.kill() }
+  }, [])
 
   const onEnter = () => {
+    idlePulseRef.current?.kill()
     pulseRef.current?.kill()
     if (ringRef.current) gsap.set(ringRef.current, { scale: 0.4, opacity: 0 })
     pulseRef.current = gsap.to(ringRef.current, {
@@ -331,11 +350,13 @@ function GalaxyStar({ id, name, top, left, compact = false, onSelect }: GalaxySt
       opacity: 0.72, scale: 1,
       boxShadow: '0 0 7px rgba(74,158,255,0.7), 0 0 20px rgba(74,158,255,0.30)',
       duration: 0.45, ease: 'power2.out',
+      onComplete: startIdlePulse,
     })
     gsap.to(labelRef.current, { opacity: 0.72, duration: 0.4, ease: 'power2.out' })
   }
 
   const onClick = () => {
+    idlePulseRef.current?.kill()
     pulseRef.current?.kill()
     gsap.timeline()
       .to(dotRef.current, {

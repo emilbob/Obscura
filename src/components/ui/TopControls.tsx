@@ -29,6 +29,10 @@ export default function TopControls({ onScrollTop }: TopControlsProps) {
         ease:     shouldShow ? 'power2.out' : 'power2.in',
         overwrite: true,
       })
+      // Faded out but still `auto` would let it intercept hover from
+      // whatever now occupies this corner (e.g. the Silence chapter's
+      // credit) and pop back to visible on mouseenter.
+      if (brandRef.current) brandRef.current.style.pointerEvents = shouldShow ? 'auto' : 'none'
     }
 
     window.addEventListener('scroll', handleScroll, { passive: true })
