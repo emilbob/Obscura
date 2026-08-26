@@ -120,6 +120,7 @@ export default function HeroText({ delay = 5.2, hide = false }: HeroTextProps) {
             : "clamp(2.8rem, 8.5vw, 8.5rem)",
           letterSpacing: vp.isShort ? "0.16em" : "0.22em",
           color: "var(--star-white)",
+          textShadow: "0 4px 24px rgba(0,0,0,0.65), 0 0 12px rgba(0,0,0,0.5)",
           lineHeight: 1,
           whiteSpace: "nowrap",
           display: "flex",
@@ -158,7 +159,8 @@ export default function HeroText({ delay = 5.2, hide = false }: HeroTextProps) {
             ? "clamp(0.7rem, 3vh, 0.95rem)"   // floor keeps it above ~11px
             : "clamp(0.82rem, 1.8vw, 1.4rem)",
           letterSpacing: vp.isShort ? "0.2em" : "0.28em",
-          color: "rgba(200, 216, 240, 0.92)",
+          color: "rgba(255, 255, 255, 1)",
+          textShadow: "0 4px 24px rgba(0,0,0,0.65), 0 0 12px rgba(0,0,0,0.5)",
           textTransform: "uppercase",
         }}
       >
